@@ -2,9 +2,8 @@
 title: "EDA, version 0.1"
 output:
   html_document:
-    css: ~/GitHub/dss-ialh/gender-income-inequality-nlsy/libs/css/sidebar.css
+    css: ~/GitHub/income-inequality/gender-income-inequality-nlsy/libs/css/sidebar.css
     keep_md: yes
-    theme: lumen
     toc: yes
 ---
 
