@@ -62,3 +62,7 @@ Thumbs.db
 
 # Folder config file
 Desktop.ini
+sandbox/eda-1/eda-1.html
+sandbox/eda-1/eda-1.md
+
+sandbox/eda-1/figure_rmd/*.png
