@@ -65,6 +65,6 @@ ds_97$AGE_2014<- 2014-ds_97$KEY_BDATE_Y_1997
 path_save_79 <- "./data-unshared/derived/dto-raw-79.rds"
 path_save_97 <- "./data-unshared/derived/dto-raw-97.rds"
 
-saveRDS(list("data" = ds_79, "factors" = ds_79_factors))
-saveRDS(list("data" = ds_79, "factors" = ds_97_factors))
+saveRDS(list("data" = ds_79, "factors" = ds_79_factors), path_save_79)
+saveRDS(list("data" = ds_97, "factors" = ds_97_factors), path_save_97)
 
