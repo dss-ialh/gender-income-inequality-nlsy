@@ -1,84 +1,42 @@
-# knitr::stitch_rmd(script="./manipulation/0-ellis-map.R", output="./manipulation/stitched-output/0-ellis-map.md")
-# This script reads two files: encounter counts with location mapping and encounter timelines for selected individuals
-rm(list=ls(all=TRUE)) #Clear the memory of variables from previous run. This is not called by knitr, because it's above the first chunk.
+# the purpose of this script is to create a data transfer object (dto)
+
+# run the line below to stitch a basic html output. For elaborated report, run the corresponding .Rmd file
+# knitr::stitch_rmd(script="./manipulation/0-ellis-island.R", output="./manipulation/stitched-output/0-ellis-island.md")
+#These first few lines run only when the file is run in RStudio, !!NOT when an Rmd/Rnw file calls it!!
+rm(list=ls(all=TRUE))  #Clear the variables from previous runs.
+cat("\f") # clear console
 
 # ---- load-sources ------------------------------------------------------------
-#Load any source files that contain/define functions, but that don't load any other types of variables
-#   into memory.  Avoid side effects and don't pollute the global environment.
-source("./manipulation/function-support.R")  # assisting functions for data wrangling and testing
-source("./manipulation/object-glossary.R")   # object definitions
-source("./scripts/common-functions.R")       # reporting functions and quick views
-source("./scripts/graphing/graph-presets.R") # font and color conventions
-# ---- load-packages -----------------------------------------------------------
-library(ggplot2) #For graphing
-library(dplyr)
-library(magrittr) #Pipes
-requireNamespace("readxl")
+# Call `base::source()` on any repo file that defines functions needed below.  Ideally, no real operations are performed.
 
-requireNamespace("knitr", quietly=TRUE)
-requireNamespace("scales", quietly=TRUE) #For formating values in graphs
-requireNamespace("RColorBrewer", quietly=TRUE)
-requireNamespace("dplyr", quietly=TRUE)
-requireNamespace("DT", quietly=TRUE) # for dynamic tables
-# requireNamespace("plyr", quietly=TRUE)
-# requireNamespace("reshape2", quietly=TRUE) #For converting wide to long
-# requireNamespace("mgcv, quietly=TRUE) #For the Generalized Additive Model that smooths the longitudinal graphs.
+# ---- load-packages -----------------------------------------------------------
+# Attach these packages so their functions don't need to be qualified: http://r-pkgs.had.co.nz/namespace.html#search-path
+# library(tidyverse) #Pipes
+
 
 # ---- declare-globals ---------------------------------------------------------
-# link to the source of the location mapping
-# path_input <- "./data-unshared/raw/SearchVariables.csv"
-path_input <- "./data-unshared/raw/coverage.csv"
-# test whether the file exists / the link is good
-testit::assert("File does not exist", base::file.exists(path_input))
-# declare where you will store the product of this script
-# path_save <- "./data-unshared/derived/memory"
-path_save <- "./data-unshared/derived/dto-1"
-# See definitions of commonly  used objects in:
-source("./manipulation/object-glossary.R")   # object definitions
-path_save_meta <- "./data-unshared/meta/coverage-live.csv"
-path_input_meta <- "./data-public/meta/coverage-dead.csv"
 
-# path_save_meta <- "./data-unshared/meta/memory-live.csv"
-# path_input_meta <- "./data-public/meta/memory-dead.csv"
+nlsy_79_folder <- "./data-unshared/raw/nlsy79-gender-income-2017-12-10/"
+path_input_79_data  <- paste0(nlsy_79_folder,"nlsy79-gender-income-2017-12-10.dat")
+path_input_79_script <-paste0(nlsy_79_folder,"nlsy79-gender-income-2017-12-10.R")
 
-# ---- utility-functions ----------------------------------------------------- 
-# functions, the use of which is localized to this script
 
 # ---- load-data ---------------------------------------------------------------
-ds <- readr::read_csv(path_input,skip = 2) %>% as.data.frame() 
-ds <- ds %>% tibble::as_tibble()
-# ds <- readr::read_csv(path_input) %>% as.data.frame() 
-
-# ---- inspect-data -----------------------------------------------------------
-ds %>% dplyr::glimpse()
-
-# ---- tweak-data -------------------------------------------------------------
-# identify the function of variables with respect to THIS wide-long tranformation
-variables_static <- common_stem
-variables_dynamic <- setdiff(colnames(ds), variables_static)
-# tranform
-ds_long <- ds %>% 
-  tidyr::gather_("measure","value", variables_dynamic)
-
-ds_long %>% head()
-ds_long %>% glimpse()
-# save unique measure names 
-ds_long %>% 
-  dplyr::distinct(measure) %>% 
-  readr::write_csv(path_save_meta) 
-# edit the meta data spreadsheed manually and save it in data-public/meta
-ds_meta  <- readr::read_csv(path_input_meta)
-# augemnt the long file with meta data
-ds_long <- ds_long %>% 
-  dplyr::left_join(ds_meta, by = "measure" ) %>% 
-  tibble::as_tibble()
-
-# ---- explore-data ------------------------------------------
+# load the NLSY79 cohort
+# NOTE: YOU MUST DISABLE line (6) that reads in the file. Read it in here
+new_data <- read.table(path_input_79_data, sep=' ')
+source(path_input_79_script)
 
 
-# ---- save-to-disk ----------------
-saveRDS(ds_long, paste0(path_save,".rds"))
-readr::write_csv(ds_long, paste0(path_save,".csv"))
+ds_79 <- new_data
+ds_79_factors <- categories
 
+View(ds_79)
 
+# ---- define-utility-functions ---------------
+
+# ---- save-to-disk ----------------------------
+
+# save to disk 
+saveRDS(new_data, path_output)
 
