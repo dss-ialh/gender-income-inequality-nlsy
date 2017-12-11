@@ -58,6 +58,7 @@ ds_97_factors %>% dplyr::glimpse()
 # ---- tweak-data-79 --------------------------
 ds_79$AGE_1993<-ds_79$`FAM-1B_1979`+(1993-1979)
 # ---- tweak-data-97 --------------------------
+ds_97$AGE_2014<- 2014-ds_97$KEY_BDATE_Y_1997
 # ---- save-to-disk ----------------------------
 
 # save to disk 
