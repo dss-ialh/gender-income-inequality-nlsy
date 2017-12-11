@@ -59,8 +59,13 @@ ds_97_factors %>% dplyr::glimpse()
 
 # ---- tweak-data-97 --------------------------
 
-# ---- save-to-disk ----------------------------
+# ---- merge-cohorts ---------------------------
 
-# save to disk 
-saveRDS(new_data, path_output)
+# ---- save-to-disk ----------------------------
+# where data transfer objects should be saved
+path_save_79 <- "./data-unshared/derived/dto-raw-79.rds"
+path_save_97 <- "./data-unshared/derived/dto-raw-97.rds"
+
+saveRDS(list("data" = ds_79, "factors" = ds_79_factors))
+saveRDS(list("data" = ds_79, "factors" = ds_97_factors))
 
