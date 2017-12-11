@@ -59,8 +59,12 @@ ds_97_factors %>% dplyr::glimpse()
 ds_79$AGE_1993<-ds_79$`FAM-1B_1979`+(1993-1979)
 # ---- tweak-data-97 --------------------------
 ds_97$AGE_2014<- 2014-ds_97$KEY_BDATE_Y_1997
-# ---- save-to-disk ----------------------------
 
-# save to disk 
-saveRDS(new_data, path_output)
+# ---- save-to-disk ----------------------------
+# where data transfer objects should be saved
+path_save_79 <- "./data-unshared/derived/dto-raw-79.rds"
+path_save_97 <- "./data-unshared/derived/dto-raw-97.rds"
+
+saveRDS(list("data" = ds_79, "factors" = ds_79_factors))
+saveRDS(list("data" = ds_79, "factors" = ds_97_factors))
 
