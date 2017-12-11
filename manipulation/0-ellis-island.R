@@ -12,7 +12,7 @@ cat("\f") # clear console
 # ---- load-packages -----------------------------------------------------------
 # Attach these packages so their functions don't need to be qualified: http://r-pkgs.had.co.nz/namespace.html#search-path
 # library(tidyverse) #Pipes
-
+  library(magrittr)
 
 # ---- declare-globals ---------------------------------------------------------
 
@@ -20,20 +20,44 @@ nlsy_79_folder <- "./data-unshared/raw/nlsy79-gender-income-2017-12-10/"
 path_input_79_data  <- paste0(nlsy_79_folder,"nlsy79-gender-income-2017-12-10.dat")
 path_input_79_script <-paste0(nlsy_79_folder,"nlsy79-gender-income-2017-12-10.R")
 
+nlsy_97_folder <- "./data-unshared/raw/nlsy97-gender-income-2017-12-10/"
+path_input_97_data  <- paste0(nlsy_97_folder,"nlsy97-gender-income-2017-12-10.dat")
+path_input_97_script <-paste0(nlsy_97_folder,"nlsy97-gender-income-2017-12-10.R")
+
 
 # ---- load-data ---------------------------------------------------------------
 # load the NLSY79 cohort
-# NOTE: YOU MUST DISABLE line (6) that reads in the file. Read it in here
+# NOTE: YOU MUST DISABLE line (6) that reads in the file. Instead read it in here
+# enable 3 lines at the end of the automatic R script that creates 'categories' and 'new_data' objects
 new_data <- read.table(path_input_79_data, sep=' ')
 source(path_input_79_script)
-
-
-ds_79 <- new_data
+# replace standard objects from automatic scripts with custom names
+ds_79         <- new_data
 ds_79_factors <- categories
+# remove automatically created objects
+rm(list=c("new_data","categories"))
 
-View(ds_79)
+# repeat import for NLSY97 cohort 
+new_data <- read.table(path_input_97_data, sep=' ')
+source(path_input_97_script)
+# replace standard objects from automatic scripts with custom names
+ds_97         <- new_data
+ds_97_factors <- categories
+# remove automatically created objects
+rm(list=c("new_data","categories"))
 
 # ---- define-utility-functions ---------------
+
+# ---- inspect-data ---------------------------
+ds_79 %>% dplyr::glimpse()
+ds_79_factors %>% dplyr::glimpse()
+
+ds_97 %>% dplyr::glimpse()
+ds_97_factors %>% dplyr::glimpse()
+
+# ---- tweak-data-79 --------------------------
+
+# ---- tweak-data-97 --------------------------
 
 # ---- save-to-disk ----------------------------
 
